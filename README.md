@@ -1,68 +1,114 @@
 # APKDig
 
-**APKDig** is a powerful tool designed to extract potentially sensitive files from Android APKs or already decompiled APK directories. It automates the process of locating and organizing critical files such as configuration files, database files, logs, and more — all useful during mobile application security assessments.
+APKDig is a Rust-based utility that extracts sensitive or high-value files from Android APKs or already-decompiled APK directories. It automates the discovery and collection of configuration files, databases, logs, backups, and other artifacts useful during mobile security testing.
 
 ---
 
-## 🔍 Features
+## Features
 
-* Supports both APK files and decompiled directories
-* Automatically categorizes files based on extension
-* Helps identify secrets, tokens, logs, backups, and more
-* Useful for mobile bug bounty and penetration testing
-
----
-
-## 📦 File Types Extracted
-
-APKDig targets files with the following extensions:
-
-* `.env`, `.properties`, `.conf`, `.cnf`, `.cfg`, `.ini`, `.yml`, `.yaml`
-* `.db`, `.sqlite`, `.sqlite3`, `.pkl`, `.ndjson`, `.json`
-* `.bak`, `.log`, `.swp`
-* `.dex`, `.smali`, `.so`
+* Works on APK files and decompiled directories.
+* Automatically categorizes extracted files by type.
+* Detects configs, databases, logs, backups, smali, native libs, and more.
+* Helpful for mobile bug bounty, forensics, and pentesting workflows.
 
 ---
 
-## 🛠️ Requirements
+## File Types Extracted
 
-* Python 3.x
-* [apktool](https://github.com/iBotPeaches/Apktool) (only if using the `-a` option)
+Targeted extensions include:
+
+* Config: `.env`, `.properties`, `.conf`, `.cnf`, `.cfg`, `.ini`, `.yml`, `.yaml`
+* Databases: `.db`, `.sqlite`, `.sqlite3`, `.pkl`, `.ndjson`, `.json`
+* Backups / Logs / Misc: `.bak`, `.log`, `.swp`
+* Code / Artifacts: `.dex`, `.smali`, `.so`
 
 ---
 
-## 🚀 Usage
+## Installation
+
+### Install Rust
 
 ```bash
-python apkdig.py -a myapp.apk
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+. "$HOME/.cargo/env"
+```
+
+(optional but recommended)
+
+```bash
+echo '. "$HOME/.cargo/env"' >> ~/.zshrc
+```
+
+### Build APKDig
+
+```bash
+cd APKDig-main
+cargo build --release
+```
+
+The compiled binary will be available at:
+
+```
+target/release/apkdig
+```
+
+---
+
+## Usage
+
+### Run against an APK
+
+```bash
+./target/release/apkdig -a myapp.apk
 ```
 
 This will:
 
-1. Decompile `myapp.apk` using apktool
-2. Extract all targeted files into organized folders
+1. Decompile `myapp.apk` (if the tool supports decompiling).
+2. Scan the directory.
+3. Extract matched files into organized output folders.
 
-Or if you already have a decompiled APK:
+### Run against an already-decompiled directory
 
 ```bash
-python apkdig.py -d path/to/decompiled_folder
+./target/release/apkdig -d /path/to/decompiled_apk/
+```
+
+### View all options
+
+```bash
+./target/release/apkdig --help
 ```
 
 ---
 
-## 📁 Output Structure
+## Output Structure
 
-After execution, folders like `env_files/`, `json_files/`, `db_files/`, etc., will be created in the current directory, each containing the corresponding extracted files.
+The tool creates categorized folders such as:
+
+```
+env_files/
+db_files/
+json_files/
+dex_files/
+smali_files/
+so_files/
+log_files/
+...
+```
+
+Each folder contains the extracted files relevant to that category.
 
 ---
 
-## 📌 Example
+## Example
 
 ```bash
-$ python apkdig.py -a sample.apk
+$ ./target/release/apkdig -a sample.apk
 
-[+] Decompiling APK...
-[+] Extracting sensitive files...
+[+] Decompiling...
+[+] Scanning for sensitive files...
+[+] Extracted:
 ├── env_files/
 ├── db_files/
 ├── json_files/
@@ -71,14 +117,15 @@ $ python apkdig.py -a sample.apk
 
 ---
 
-## ⚠️ Disclaimer
+## Disclaimer
 
-This tool is intended for educational and authorized security testing purposes only. Unauthorized use is prohibited.
+Use this tool only for authorized security testing and research. Any unauthorized use is prohibited.
 
 ---
 
-## 🧑‍💻 Author
+## Author
 
-**Raunak Gupta**
-Founder of [Biscuit Security](https://github.com/biscuit-security)
-[LinkedIn](https://linkedin.com/in/raunakgupta01) • [Medium](https://medium.com/@raunakgupta01)
+Raunak Gupta
+Founder, Biscuit Security
+LinkedIn: [https://linkedin.com/in/raunakgupta01](https://linkedin.com/in/raunakgupta01)
+Portfolio: [https://www.b1scuit.pro/](https://www.b1scuit.pro/)
